@@ -16,19 +16,32 @@
 
   html {
     scroll-behavior: smooth;
+    box-sizing: border-box;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  *, *::before, *::after {
+    box-sizing: inherit;
   }
 
   body {
     font-family: var(--font-sans);
     background-color: #050608;
     color: #ede8df;
-    user-select: none;
-    -webkit-user-select: none;
     overflow-x: hidden;
     overflow-y: auto;
     margin: 0;
     padding: 0;
     min-height: 100vh;
+    min-height: 100dvh;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Accessible Focus Rings */
+  :focus-visible {
+    outline: 2px solid #d4af37 !important;
+    outline-offset: 3px !important;
   }
 }
 
@@ -42,6 +55,15 @@
 
 .font-mono-tech {
   font-family: var(--font-mono);
+}
+
+/* Safe Area Insets for Mobile Notches & Dynamic Island */
+.safe-top {
+  padding-top: max(0.75rem, env(safe-area-inset-top));
+}
+
+.safe-bottom {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
 }
 
 /* Film Grain Texture Overlay */
@@ -96,10 +118,10 @@
     transform: scale(1) translate(0, 0);
   }
   50% {
-    transform: scale(1.08) translate(-1%, -1%);
+    transform: scale(1.06) translate(-0.8%, -0.8%);
   }
   100% {
-    transform: scale(1.15) translate(1%, 0.5%);
+    transform: scale(1.12) translate(0.8%, 0.4%);
   }
 }
 
@@ -107,9 +129,29 @@
   animation: kenBurns 24s ease-in-out infinite alternate;
 }
 
+/* Accessibility: Respect Reduced Motion Preferences */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .animate-ken-burns,
+  .animate-tungsten-pulse,
+  .animate-rain-streak {
+    animation: none !important;
+  }
+}
+
 /* Custom Scrollbar for Phone / Modals */
 ::-webkit-scrollbar {
   width: 4px;
+  height: 4px;
 }
 ::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.2);

@@ -13,6 +13,7 @@ export const VideoMemoryCard: React.FC<VideoMemoryCardProps> = ({ memory, onClic
   const videoRef = useRef<HTMLVideoElement>(null);
   const rotation = memory.rotation ?? 0;
   const isFeatured = memory.featured;
+  const posterUrl = memory.media.replace(/\.mp4$/i, '-poster.jpg');
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -34,31 +35,42 @@ export const VideoMemoryCard: React.FC<VideoMemoryCardProps> = ({ memory, onClic
     onClick();
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleClick();
+    }
+  };
+
   return (
     <div
+      role="button"
+      tabIndex={0}
+      aria-label={`Open video memory: ${memory.title}, ${memory.date}`}
       onClick={handleClick}
+      onKeyDown={handleKeyDown}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{
         transform: isHovered
-          ? 'translateY(-10px) scale(1.02) rotate(0deg)'
+          ? 'translateY(-8px) scale(1.02) rotate(0deg)'
           : `rotate(${rotation}deg)`,
-        transition: 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.5s ease'
+        transition: 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease'
       }}
-      className={`group relative cursor-pointer select-none max-w-sm sm:max-w-md w-full my-4 ${
+      className={`group relative cursor-pointer select-none max-w-sm sm:max-w-md w-full my-4 touch-manipulation active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-[#d4af37] focus-visible:outline-none rounded-sm ${
         isFeatured ? 'sm:col-span-2 sm:max-w-lg lg:col-span-1 lg:max-w-md' : ''
       }`}
     >
-      {/* Featured Subtle Milestone Aura */}
+      {/* Featured Milestone Aura */}
       {isFeatured && (
-        <div className="absolute -inset-1 bg-gradient-to-r from-[#d4af37]/20 via-amber-500/10 to-[#d4af37]/20 rounded-sm blur-md pointer-events-none -z-10" />
+        <div className="absolute -inset-1 bg-gradient-to-r from-[#d4af37]/25 via-amber-500/15 to-[#d4af37]/25 rounded-sm blur-md pointer-events-none -z-10" />
       )}
 
       {/* Cinematic Film Memory Card Frame */}
       <div
         className={`relative bg-[#101216] p-3 sm:p-4 rounded-sm border shadow-[0_20px_45px_rgba(0,0,0,0.85)] transition-colors duration-500 ${
           isFeatured
-            ? 'border-[#d4af37]/45 ring-1 ring-[#d4af37]/30 shadow-[0_25px_60px_rgba(212,175,55,0.12)]'
+            ? 'border-[#d4af37]/50 ring-1 ring-[#d4af37]/35 shadow-[0_25px_60px_rgba(212,175,55,0.15)]'
             : 'border-white/10'
         }`}
       >
@@ -79,14 +91,15 @@ export const VideoMemoryCard: React.FC<VideoMemoryCardProps> = ({ memory, onClic
         </div>
 
         {/* Video Viewport Container */}
-        <div className="relative aspect-[9/16] max-h-[400px] w-full mx-auto my-2.5 overflow-hidden bg-black rounded-xs border border-white/10 shadow-inner flex items-center justify-center">
+        <div className="relative aspect-[9/16] max-h-[380px] sm:max-h-[400px] w-full mx-auto my-2.5 overflow-hidden bg-black rounded-xs border border-white/10 shadow-inner flex items-center justify-center">
           <video
             ref={videoRef}
             src={memory.media}
+            poster={posterUrl}
             muted
             playsInline
             loop
-            preload="metadata"
+            preload="none"
             className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
           />
 

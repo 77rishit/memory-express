@@ -35,18 +35,31 @@ export const MemoryCard: React.FC<MemoryCardProps> = ({ memory, onClick }) => {
       onClick();
     };
 
+    const handleGeneralKeyDown = (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleGeneralClick();
+      }
+    };
+
+    const webpUrl = memory.media.replace(/\.(png|jpg|jpeg)$/i, '.webp');
+
     return (
       <div
+        role="button"
+        tabIndex={0}
+        aria-label={`Open memory: ${memory.title}, ${memory.date}`}
         onClick={handleGeneralClick}
+        onKeyDown={handleGeneralKeyDown}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         style={{
           transform: isHovered
             ? 'translateY(-8px) scale(1.02) rotate(0deg)'
             : `rotate(${rotation}deg)`,
-          transition: 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.5s ease'
+          transition: 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease'
         }}
-        className="group relative cursor-pointer select-none max-w-sm sm:max-w-md w-full my-4"
+        className="group relative cursor-pointer select-none max-w-sm sm:max-w-md w-full my-4 touch-manipulation active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-[#d4af37] focus-visible:outline-none rounded-sm"
       >
         <div className="relative bg-[#181a20] p-3 sm:p-4 rounded-sm border border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.7)]">
           {/* Top minimal date & tag */}
@@ -60,12 +73,16 @@ export const MemoryCard: React.FC<MemoryCardProps> = ({ memory, onClick }) => {
 
           {/* Media Viewport */}
           <div className="relative aspect-[3/4] w-full overflow-hidden bg-black rounded-xs border border-white/5">
-            <img
-              src={memory.media}
-              alt={memory.title}
-              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-              loading="lazy"
-            />
+            <picture>
+              <source srcSet={webpUrl} type="image/webp" />
+              <img
+                src={memory.media}
+                alt={memory.title}
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              />
+            </picture>
             <div className="absolute inset-0 film-grain opacity-30 pointer-events-none" />
           </div>
 
@@ -92,6 +109,13 @@ export const MemoryCard: React.FC<MemoryCardProps> = ({ memory, onClick }) => {
     onClick();
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleClick();
+    }
+  };
+
   const aspectClass =
     memory.aspectRatio === '1/1'
       ? 'aspect-square'
@@ -103,18 +127,24 @@ export const MemoryCard: React.FC<MemoryCardProps> = ({ memory, onClick }) => {
       ? 'aspect-[3/4]'
       : 'aspect-[4/3]';
 
+  const webpUrl = memory.media.replace(/\.(png|jpg|jpeg)$/i, '.webp');
+
   return (
     <div
+      role="button"
+      tabIndex={0}
+      aria-label={`Open photo memory: ${memory.title}, ${memory.date}`}
       onClick={handleClick}
+      onKeyDown={handleKeyDown}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
         transform: isHovered
-          ? 'translateY(-10px) scale(1.02) rotate(0deg)'
-          : `rotate(${rotation}deg)`,
-        transition: 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.5s ease'
+          ? 'translateY(-8px) scale(1.02) rotate(0deg)'
+          : `rotate(${rotation * 0.5}deg)`,
+        transition: 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease'
       }}
-      className="group relative cursor-pointer select-none max-w-sm sm:max-w-md w-full my-4"
+      className="group relative cursor-pointer select-none max-w-[310px] xs:max-w-sm sm:max-w-md w-full my-3 sm:my-4 touch-manipulation active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-[#d4af37] focus-visible:outline-none rounded-xs"
     >
       {/* Physical Photographic Card Body */}
       <div
@@ -127,12 +157,16 @@ export const MemoryCard: React.FC<MemoryCardProps> = ({ memory, onClick }) => {
 
         {/* Media Frame */}
         <div className={`relative ${aspectClass} w-full overflow-hidden bg-[#12151b] rounded-2xs`}>
-          <img
-            src={memory.media}
-            alt={memory.title}
-            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-            loading="lazy"
-          />
+          <picture>
+            <source srcSet={webpUrl} type="image/webp" />
+            <img
+              src={memory.media}
+              alt={memory.title}
+              loading="lazy"
+              decoding="async"
+              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            />
+          </picture>
 
           {/* Film Grain on photograph */}
           <div className="absolute inset-0 film-grain opacity-30 pointer-events-none" />

@@ -14,13 +14,13 @@ export const YearChapter: React.FC<YearChapterProps> = ({ chapter, onSelectMemor
   return (
     <section id={`year-${chapter.year}`} className="relative py-16 sm:py-24 border-b border-white/5 scroll-mt-24">
       {/* Chapter Header */}
-      <div className="max-w-6xl mx-auto px-6 mb-12 sm:mb-16">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 mb-10 sm:mb-16">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-[#d4af37]/20 pb-6">
           <div>
-            <span className="font-mono-tech text-xs tracking-[0.3em] uppercase text-[#d4af37]/80 block mb-1">
+            <span className="font-mono-tech text-[10px] sm:text-xs tracking-[0.15em] sm:tracking-[0.3em] uppercase text-[#d4af37]/80 block mb-1">
               CHAPTER · {chapter.theme}
             </span>
-            <h2 className="font-cinzel text-5xl sm:text-7xl lg:text-8xl font-bold tracking-[0.1em] text-[#ede8df] leading-none">
+            <h2 className="font-cinzel text-4xl xs:text-5xl sm:text-7xl lg:text-8xl font-bold tracking-[0.06em] sm:tracking-[0.1em] text-[#ede8df] leading-none">
               {chapter.displayYear}
             </h2>
           </div>
@@ -37,9 +37,9 @@ export const YearChapter: React.FC<YearChapterProps> = ({ chapter, onSelectMemor
       </div>
 
       {/* Memory Cards Grid or Natural Timeline Gap */}
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {hasMemories ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 lg:gap-12 justify-items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10 lg:gap-12 justify-items-center">
             {chapter.memories.map((memory) => (
               <MemoryCard
                 key={memory.id}

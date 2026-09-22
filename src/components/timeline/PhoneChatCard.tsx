@@ -11,36 +11,48 @@ interface PhoneChatCardProps {
 export const PhoneChatCard: React.FC<PhoneChatCardProps> = ({ memory, onClick }) => {
   const [isHovered, setIsHovered] = useState(false);
   const rotation = memory.rotation ?? 0;
+  const webpUrl = memory.media.replace(/\.(png|jpg|jpeg)$/i, '.webp');
 
   const handleClick = () => {
     ambientSound.playCardInspect();
     onClick();
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleClick();
+    }
+  };
+
   return (
     <div
+      role="button"
+      tabIndex={0}
+      aria-label={`Open chat screenshot: ${memory.title}, ${memory.date}`}
       onClick={handleClick}
+      onKeyDown={handleKeyDown}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
         transform: isHovered
           ? 'translateY(-10px) scale(1.02) rotate(0deg)'
           : `rotate(${rotation}deg)`,
-        transition: 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.5s ease'
+        transition: 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease'
       }}
-      className="group relative cursor-pointer select-none max-w-xs sm:max-w-sm w-full my-4"
+      className="group relative cursor-pointer select-none max-w-[285px] xs:max-w-xs sm:max-w-sm w-full my-4 touch-manipulation active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-[#d4af37] focus-visible:outline-none rounded-[2.5rem]"
     >
       {/* Phone Hardware Chassis */}
-      <div className="relative bg-[#16171b] p-3 pt-3.5 pb-4 rounded-[2.5rem] border-4 border-[#2c2d33] shadow-[0_25px_50px_rgba(0,0,0,0.85)] ring-1 ring-white/15">
+      <div className="relative bg-[#16171b] p-2.5 sm:p-3 pt-3.5 pb-4 rounded-[2.4rem] sm:rounded-[2.5rem] border-4 border-[#2c2d33] shadow-[0_25px_50px_rgba(0,0,0,0.85)] ring-1 ring-white/15">
         {/* Subtle Metallic Outer Edge Highlights */}
-        <div className="absolute inset-0 rounded-[2.3rem] ring-1 ring-white/10 pointer-events-none" />
+        <div className="absolute inset-0 rounded-[2.2rem] ring-1 ring-white/10 pointer-events-none" />
 
         {/* Top Speaker / Dynamic Island */}
-        <div className="flex items-center justify-between px-6 pt-1 pb-2">
+        <div className="flex items-center justify-between px-4 sm:px-6 pt-1 pb-2">
           <span className="text-[10px] font-mono-tech text-white/50 tracking-wider">
             {memory.date.includes('·') ? memory.date.split('·')[1].trim() : '10:55'}
           </span>
-          <div className="w-20 h-4 bg-black rounded-full flex items-center justify-center gap-1.5 px-2">
+          <div className="w-18 sm:w-20 h-3.5 sm:h-4 bg-black rounded-full flex items-center justify-center gap-1.5 px-2">
             <span className="w-1.5 h-1.5 rounded-full bg-[#1c1c1e]" />
             <span className="w-1.5 h-1.5 rounded-full bg-[#0a84ff]/60" />
           </div>
@@ -53,13 +65,17 @@ export const PhoneChatCard: React.FC<PhoneChatCardProps> = ({ memory, onClick })
         </div>
 
         {/* Screenshot Viewport Container */}
-        <div className="relative aspect-[9/17] w-full overflow-hidden bg-black rounded-[1.6rem] border border-white/5">
-          <img
-            src={memory.media}
-            alt={memory.title}
-            className="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-            loading="lazy"
-          />
+        <div className="relative aspect-[9/17] w-full overflow-hidden bg-black rounded-[1.5rem] sm:rounded-[1.6rem] border border-white/5">
+          <picture>
+            <source srcSet={webpUrl} type="image/webp" />
+            <img
+              src={memory.media}
+              alt={memory.title}
+              loading="lazy"
+              decoding="async"
+              className="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+            />
+          </picture>
 
           {/* Glare Glass Reflection */}
           <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/15 pointer-events-none rounded-[1.6rem]" />
@@ -86,10 +102,10 @@ export const PhoneChatCard: React.FC<PhoneChatCardProps> = ({ memory, onClick })
         </div>
 
         {/* Bottom Home Indicator Bar */}
-        <div className="w-24 h-1 bg-white/30 rounded-full mx-auto mt-2.5" />
+        <div className="w-20 sm:w-24 h-1 bg-white/30 rounded-full mx-auto mt-2.5" />
 
         {/* Card Caption Label Below Phone */}
-        <div className="mt-3.5 px-2">
+        <div className="mt-3 px-1 sm:px-2">
           <div className="flex items-baseline justify-between gap-2">
             <h3 className="font-garamond text-base sm:text-lg text-[#ede8df] font-semibold tracking-wide group-hover:text-[#d4af37] transition-colors line-clamp-1">
               {memory.title}
@@ -107,7 +123,7 @@ export const PhoneChatCard: React.FC<PhoneChatCardProps> = ({ memory, onClick })
         </div>
       </div>
 
-      {/* Realistic Deep Drop Shadow behind card */}
+      {/* Deep Drop Shadow behind card */}
       <div className="absolute -bottom-3 -right-2 w-full h-full bg-black/60 -z-10 rounded-[2.5rem] blur-xl" />
     </div>
   );

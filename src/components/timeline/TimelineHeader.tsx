@@ -67,11 +67,11 @@ export const TimelineHeader: React.FC<TimelineHeaderProps> = () => {
   ];
 
   return (
-    <header className="fixed top-0 inset-x-0 z-40 bg-[#050608]/90 backdrop-blur-xl border-b border-white/10 px-3 sm:px-8 py-3 flex items-center justify-between transition-all">
+    <header className="fixed top-0 inset-x-0 z-40 bg-[#050608]/92 backdrop-blur-xl border-b border-white/10 px-2.5 sm:px-6 py-2 sm:py-3 flex items-center justify-between safe-top">
       {/* Brand Title */}
       <div className="flex items-center gap-2 shrink-0">
         <Sparkles className="w-3.5 h-3.5 text-[#d4af37]" />
-        <span className="font-cinzel text-xs sm:text-sm tracking-[0.25em] text-[#ede8df] font-bold uppercase hidden xs:inline">
+        <span className="font-cinzel text-xs sm:text-sm tracking-[0.25em] text-[#ede8df] font-bold uppercase hidden md:inline">
           MY TIMELINE
         </span>
       </div>
@@ -79,7 +79,7 @@ export const TimelineHeader: React.FC<TimelineHeaderProps> = () => {
       {/* Progress Indicator: 2022 — 2023 — 2024 — 2025 — 2026 — NOW */}
       <nav
         aria-label="Timeline Chronology"
-        className="flex items-center gap-1 sm:gap-2 px-3 py-1.5 rounded-full bg-black/60 border border-white/10 overflow-x-auto max-w-[85vw] sm:max-w-none scrollbar-none"
+        className="flex items-center gap-1 sm:gap-1.5 px-2.5 py-1 rounded-full bg-black/60 border border-white/10 overflow-x-auto max-w-[74vw] sm:max-w-none scrollbar-none touch-pan-x"
       >
         {timelineSteps.map((step, idx) => {
           const isActive = activeYear === step.label;
@@ -88,18 +88,23 @@ export const TimelineHeader: React.FC<TimelineHeaderProps> = () => {
           return (
             <React.Fragment key={step.label}>
               <button
+                type="button"
                 onClick={() => scrollToYear(step.value)}
-                className={`px-2 py-0.5 rounded-full text-[11px] sm:text-xs font-mono-tech tracking-wider transition-all duration-300 whitespace-nowrap ${
+                aria-label={`Jump to year ${step.label}`}
+                aria-current={isActive ? 'step' : undefined}
+                className={`min-h-[36px] min-w-[34px] px-2 sm:px-2.5 py-1 rounded-full text-xs font-mono-tech tracking-wider transition-all duration-300 whitespace-nowrap touch-manipulation focus-visible:ring-2 focus-visible:ring-[#d4af37] ${
                   isActive
-                    ? 'text-[#d4af37] bg-[#d4af37]/15 font-semibold ring-1 ring-[#d4af37]/40 shadow-[0_0_12px_rgba(212,175,55,0.25)]'
-                    : 'text-white/60 hover:text-white hover:bg-white/10'
+                    ? 'text-[#d4af37] bg-[#d4af37]/20 font-semibold ring-1 ring-[#d4af37]/50 shadow-[0_0_12px_rgba(212,175,55,0.25)]'
+                    : 'text-white/65 hover:text-white hover:bg-white/10 active:bg-white/15'
                 }`}
-                title={`Jump to ${step.label}`}
               >
                 {step.label}
               </button>
               {!isLast && (
-                <span className="text-white/20 select-none text-[10px] sm:text-xs font-mono-tech px-0.5">
+                <span
+                  aria-hidden="true"
+                  className="text-white/20 select-none text-[10px] sm:text-xs font-mono-tech px-0.5"
+                >
                   —
                 </span>
               )}
@@ -109,17 +114,18 @@ export const TimelineHeader: React.FC<TimelineHeaderProps> = () => {
       </nav>
 
       {/* Ambient Sound Toggle */}
-      <div className="flex items-center gap-3 shrink-0">
+      <div className="flex items-center gap-2 shrink-0">
         <button
+          type="button"
           onClick={handleToggleSound}
-          title={isMuted ? 'Unmute Ambient Sound' : 'Mute Ambient Sound'}
-          className="p-2 rounded-full bg-white/5 hover:bg-white/15 text-white/70 hover:text-white border border-white/10 transition-all flex items-center gap-2 text-xs font-mono-tech"
+          aria-label={isMuted ? 'Unmute Ambient Sound' : 'Mute Ambient Sound'}
+          className="min-h-[44px] min-w-[44px] p-2 rounded-full bg-white/5 hover:bg-white/15 active:bg-white/20 text-white/70 hover:text-white border border-white/10 transition-all flex items-center justify-center text-xs font-mono-tech touch-manipulation focus-visible:ring-2 focus-visible:ring-[#d4af37]"
         >
           {isMuted ? (
-            <VolumeX className="w-3.5 h-3.5 text-red-400" />
+            <VolumeX className="w-4 h-4 text-red-400" />
           ) : (
             <div className="flex items-center gap-1.5">
-              <Volume2 className="w-3.5 h-3.5 text-[#d4af37]" />
+              <Volume2 className="w-4 h-4 text-[#d4af37]" />
               <div className="flex items-end gap-0.5 h-2.5">
                 <span className="w-0.5 bg-[#d4af37] rounded-full animate-bounce h-1.5" style={{ animationDelay: '0ms' }} />
                 <span className="w-0.5 bg-[#d4af37] rounded-full animate-bounce h-2.5" style={{ animationDelay: '150ms' }} />
